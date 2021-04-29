@@ -57,7 +57,6 @@ impl Sandbox for GameUI<'_> {
     fn new() -> Self {
         Self {
             value: 10,
-            scroll: scrollable::State::new(),
             ..Default::default()
         }
     }

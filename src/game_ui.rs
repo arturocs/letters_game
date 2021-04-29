@@ -9,7 +9,7 @@ use iced::{
 
 use crate::ui_text::UIText;
 use crate::{
-    game_core::{self, Game},
+    game_core::{self, Game, GameResult},
     style,
 };
 
@@ -76,7 +76,11 @@ impl Sandbox for GameUI<'_> {
                 self.game_core.generate_available_letters(self.value.into());
             }
             Message::Input(s) => self.text_input_value = s.to_lowercase(),
-            Message::PlayPressed => self.play(),
+            Message::PlayPressed => {
+                if self.text_input_value != "" {
+                    self.play()
+                }
+            }
             Message::EnglishPressed => self.language = Screen::Play,
             Message::SpanishPressed => {
                 self.language = Screen::Play;
@@ -226,25 +230,13 @@ impl GameUI<'_> {
 
     fn play(&mut self) {
         if self.game_messages.0 == "" {
-            if self.text_input_value != "" {
-                let input_len = self.text_input_value.chars().count();
-                self.game_messages = if self.game_core.is_formable(&self.text_input_value) {
-                    if self.game_core.exist(&self.text_input_value) {
-                        let (best, best_len) = self.game_core.find_longest_word();
-                        let best = best.to_string();
-                        if input_len == best_len.into() {
-                            (self.ui_text.my_word, best, self.ui_text.tie)
-                        } else {
-                            (self.ui_text.my_word, best, self.ui_text.you_lose)
-                        }
-                    } else {
-                        (self.ui_text.doesnt_exist, String::new(), "")
-                    }
-                } else {
-                    (self.ui_text.cant_form, String::new(), "")
-                };
-                std::mem::swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
-            }
+            self.game_messages = match self.game_core.play(&self.text_input_value) {
+                GameResult::Tie(best) => (self.ui_text.my_word, best, self.ui_text.tie),
+                GameResult::YouLose(best) => (self.ui_text.my_word, best, self.ui_text.you_lose),
+                GameResult::DoesntExist => (self.ui_text.doesnt_exist, String::new(), ""),
+                GameResult::CantForm => (self.ui_text.cant_form, String::new(), ""),
+            };
+            std::mem::swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
         } else {
             std::mem::swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
             self.game_core.generate_available_letters(self.value.into());

@@ -10,6 +10,13 @@ pub struct Game<'a> {
     available_letters: Vec<char>,
 }
 
+pub enum GameResult {
+    Tie(String),
+    YouLose(String),
+    DoesntExist,
+    CantForm,
+}
+
 impl Default for Game<'_> {
     fn default() -> Self {
         Self::new(ENGLISH_DICTIONARY, 10)
@@ -63,13 +70,13 @@ impl<'a> Game<'a> {
         let mut game = Self {
             dictionary,
             letter_count,
-            available_letters: Vec::new()
+            available_letters: Vec::new(),
         };
         game.generate_available_letters(size);
         game
     }
 
-    pub fn exist(&self, word: &str) -> bool {
+    fn exist(&self, word: &str) -> bool {
         //It doesn't matter if it overflows, because if it does, the word doesn't exist.
         let size = word.chars().count() as u8;
         self.dictionary.binary_search(&(word, size)).is_ok()
@@ -82,7 +89,7 @@ impl<'a> Game<'a> {
             .collect()
     }
 
-    pub fn is_formable(&self, word: &str) -> bool {
+    fn is_formable(&self, word: &str) -> bool {
         let mut letters = self.available_letters.clone();
         word.chars().map(Self::remove_accents).all(|c| {
             if let Ok(p) = letters.binary_search(&c) {
@@ -94,7 +101,7 @@ impl<'a> Game<'a> {
         })
     }
 
-    pub fn find_longest_word(&self) -> (&str, u8) {
+    fn find_longest_word(&self) -> (&str, u8) {
         self.dictionary
             .iter()
             .filter(|&&(_, len)| len as usize <= self.available_letters.len())
@@ -105,5 +112,22 @@ impl<'a> Game<'a> {
                     (best, best_len)
                 }
             })
+    }
+
+    pub fn play(&self, user_input: &str) -> GameResult {
+        if !self.is_formable(user_input) {
+            return GameResult::CantForm;
+        }
+        if !self.exist(user_input) {
+            return GameResult::DoesntExist;
+        }
+        let (best, best_len) = self.find_longest_word();
+        let input_len = user_input.chars().count();
+        let best = best.to_string();
+        if input_len == best_len.into() {
+            GameResult::Tie(best)
+        } else {
+            GameResult::YouLose(best)
+        }
     }
 }

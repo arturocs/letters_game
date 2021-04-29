@@ -38,6 +38,7 @@ impl<'a> Game<'a> {
 
     fn count_letters(dictionary: &[(&str, u8)]) -> Vec<(char, u32)> {
         let mut char_count = FxHashMap::default();
+        char_count.reserve(27);
         for (word, _) in dictionary.iter() {
             for c in word.chars() {
                 *char_count.entry(Self::remove_accents(c)).or_insert(0) += 1;

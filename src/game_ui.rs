@@ -163,7 +163,7 @@ impl GameUI<'_> {
                     .size(50),
             )
             .push(
-                Text::new(self.game_core.get_available_letters())
+                Text::new(self.game_core.format_available_letters())
                     .horizontal_alignment(HorizontalAlignment::Center)
                     .size(40),
             )

@@ -65,7 +65,7 @@ impl<'a> Game<'a> {
         self.dictionary.binary_search_by(|a| a.0.cmp(word)).is_ok()
     }
 
-    pub fn get_available_letters(&self) -> String {
+    pub fn format_available_letters(&self) -> String {
         self.available_letters
             .iter()
             .map(|&c| format!("{} ", c.to_uppercase()))

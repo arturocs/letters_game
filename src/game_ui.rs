@@ -9,7 +9,7 @@ use iced::{
 
 use crate::ui_text::UIText;
 use crate::{
-    game_core::{self, Game, GameResult},
+    game_core::{Game, GameResult, Language},
     style,
 };
 
@@ -84,7 +84,7 @@ impl Sandbox for GameUI<'_> {
             Message::EnglishPressed => self.language = Screen::Play,
             Message::SpanishPressed => {
                 self.language = Screen::Play;
-                self.game_core = Game::new(game_core::SPANISH_DICTIONARY, 10);
+                self.game_core = Game::new(Language::Spanish, 10);
                 self.ui_text = UIText::spanish();
             }
         }

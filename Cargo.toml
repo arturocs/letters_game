@@ -15,3 +15,11 @@ getrandom = { version = "0.2", features = ["js"] }
 lto = true
 panic = "abort"
 codegen-units = 1
+
+[workspace]
+members = ["benches"]
+
+[profile.bench]
+debug = true
+lto = true
+codegen-units = 1

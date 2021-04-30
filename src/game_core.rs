@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use crate::game_data::{ENGLISH_DICTIONARY, ENGLISH_LETTERS, SPANISH_DICTIONARY, SPANISH_LETTERS};
 use rand::{prelude::SliceRandom, thread_rng};
 pub enum Language {
@@ -25,7 +26,7 @@ impl Default for Game<'_> {
 }
 
 impl<'a> Game<'a> {
-    fn parse_dictionary(dict_str: &str) -> Vec<(&str, u8)> {
+    pub fn parse_dictionary(dict_str: &str) -> Vec<(&str, u8)> {
         dict_str
             .lines()
             .filter(|s| !s.is_empty())
@@ -75,7 +76,7 @@ impl<'a> Game<'a> {
         game
     }
 
-    fn exist(&self, word: &str) -> bool {
+    pub fn exist(&self, word: &str) -> bool {
         //It doesn't matter if it overflows, because if it does, the word doesn't exist.
         let size = word.chars().count() as u8;
         self.dictionary.binary_search(&(word, size)).is_ok()
@@ -88,7 +89,7 @@ impl<'a> Game<'a> {
             .collect()
     }
 
-    fn is_formable(&self, word: &str) -> bool {
+    pub fn is_formable(&self, word: &str) -> bool {
         let mut letters = self.available_letters.clone();
         word.chars().map(Self::remove_accents).all(|c| {
             if let Ok(p) = letters.binary_search(&c) {
@@ -100,7 +101,7 @@ impl<'a> Game<'a> {
         })
     }
 
-    fn find_longest_word(&self) -> (&str, u8) {
+    pub fn find_longest_word(&self) -> (&str, u8) {
         self.dictionary
             .iter()
             .filter(|&&(_, len)| len as usize <= self.available_letters.len())
@@ -123,7 +124,7 @@ impl<'a> Game<'a> {
         let (best, best_len) = self.find_longest_word();
         let input_len = user_input.chars().count();
         let best = best.to_string();
-        if input_len == best_len.into() {
+        if input_len == best_len as usize {
             GameResult::Tie(best)
         } else {
             GameResult::YouLose(best)

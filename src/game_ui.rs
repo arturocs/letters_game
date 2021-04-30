@@ -26,7 +26,6 @@ impl Default for Screen {
 
 #[derive(Default)]
 pub(crate) struct GameUI<'a> {
-    value: u8,
     text_input_state: text_input::State,
     text_input_value: String,
     scroll: scrollable::State,
@@ -65,12 +64,12 @@ impl Sandbox for GameUI<'_> {
     fn update(&mut self, message: Message) {
         match message {
             Message::IncrementPressed => {
-                self.value = self.value.saturating_add(1);
-                self.game_core.generate_available_letters(self.value.into());
+                let size = self.game_core.available_letters.len().saturating_add(1);
+                self.game_core.generate_available_letters(size);
             }
             Message::DecrementPressed => {
-                self.value = self.value.saturating_sub(1);
-                self.game_core.generate_available_letters(self.value.into());
+                let size = self.game_core.available_letters.len().saturating_sub(1);
+                self.game_core.generate_available_letters(size);
             }
             Message::Input(s) => self.text_input_value = s.to_lowercase(),
             Message::PlayPressed => {
@@ -182,7 +181,9 @@ impl GameUI<'_> {
                             .min_width(50)
                             .on_press(Message::IncrementPressed),
                         )
-                        .push(Text::new(&self.value.to_string()).size(50))
+                        .push(
+                            Text::new(&self.game_core.available_letters.len().to_string()).size(50),
+                        )
                         .push(
                             Button::new(
                                 &mut self.decrement_button,
@@ -240,7 +241,8 @@ impl GameUI<'_> {
             std::mem::swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
         } else {
             std::mem::swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
-            self.game_core.generate_available_letters(self.value.into());
+            self.game_core
+                .generate_available_letters(self.game_core.available_letters.len());
             self.game_messages = Default::default()
         }
     }

@@ -55,10 +55,7 @@ impl Sandbox for GameUI<'_> {
     type Message = Message;
 
     fn new() -> Self {
-        Self {
-            value: 10,
-            ..Default::default()
-        }
+        Default::default()
     }
 
     fn title(&self) -> String {

@@ -7,7 +7,7 @@ pub enum Language {
 }
 
 pub struct Game<'a> {
-    dictionary: Vec<(&'a str, u8)>,
+    dictionary: Vec<(&'a str, usize)>,
     letter_count: &'a [(char, u32)],
     available_letters: Vec<char>,
 }
@@ -26,11 +26,11 @@ impl Default for Game<'_> {
 }
 
 impl<'a> Game<'a> {
-    pub fn parse_dictionary(dict_str: &str) -> Vec<(&str, u8)> {
+    pub fn parse_dictionary(dict_str: &str) -> Vec<(&str, usize)> {
         dict_str
             .lines()
             .filter(|s| !s.is_empty())
-            .map(|s| (s, s.chars().count() as u8))
+            .map(|s| (s, s.chars().count()))
             .collect()
     }
 
@@ -62,7 +62,7 @@ impl<'a> Game<'a> {
     pub fn new(language: Language, size: usize) -> Self {
         let mut game = match language {
             Language::English => Self {
-                dictionary:Self::parse_dictionary(ENGLISH_DICTIONARY),
+                dictionary: Self::parse_dictionary(ENGLISH_DICTIONARY),
                 letter_count: &ENGLISH_LETTERS,
                 available_letters: Vec::new(),
             },
@@ -77,8 +77,7 @@ impl<'a> Game<'a> {
     }
 
     pub fn exist(&self, word: &str) -> bool {
-        //It doesn't matter if it overflows, because if it does, the word doesn't exist.
-        let size = word.chars().count() as u8;
+        let size = word.chars().count();
         self.dictionary.binary_search(&(word, size)).is_ok()
     }
 
@@ -101,10 +100,10 @@ impl<'a> Game<'a> {
         })
     }
 
-    pub fn find_longest_word(&self) -> (&str, u8) {
+    pub fn find_longest_word(&self) -> (&str, usize) {
         self.dictionary
             .iter()
-            .filter(|&&(_, len)| len as usize <= self.available_letters.len())
+            .filter(|&&(_, len)| len <= self.available_letters.len())
             .fold(("", 0), |(best, best_len), &(curr, curr_len)| {
                 if curr_len > best_len && self.is_formable(curr) {
                     (curr, curr_len)
@@ -124,7 +123,7 @@ impl<'a> Game<'a> {
         let (best, best_len) = self.find_longest_word();
         let input_len = user_input.chars().count();
         let best = best.to_string();
-        if input_len == best_len as usize {
+        if input_len == best_len {
             GameResult::Tie(best)
         } else {
             GameResult::YouLose(best)

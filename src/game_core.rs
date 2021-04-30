@@ -44,8 +44,7 @@ impl<'a> Game<'a> {
     pub fn generate_available_letters(&mut self, size: usize) {
         let rng = &mut thread_rng();
         let mut letters: Vec<_> = (0..size)
-            .map(|_| self.letter_count.choose_weighted(rng, |p| p.1 as f64))
-            .map(|r| r.unwrap().0)
+            .map(|_| self.letter_count.choose_weighted(rng, |p| p.1).unwrap().0)
             .collect();
         letters.sort_unstable();
         self.available_letters = letters;

@@ -78,11 +78,15 @@ impl Sandbox for GameUI<'_> {
                     self.play()
                 }
             }
-            Message::EnglishPressed => self.language = Screen::Play,
-            Message::SpanishPressed => {
+            Message::EnglishPressed => {
+                self.game_core = Game::new(Language::English, 10);
+                self.ui_text = UIText::english();
                 self.language = Screen::Play;
+            }
+            Message::SpanishPressed => {
                 self.game_core = Game::new(Language::Spanish, 10);
                 self.ui_text = UIText::spanish();
+                self.language = Screen::Play;
             }
         }
     }

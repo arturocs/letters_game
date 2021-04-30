@@ -5,7 +5,7 @@ pub enum Language {
     English,
     Spanish,
 }
-
+#[derive(Default)]
 pub struct Game<'a> {
     dictionary: Vec<(&'a str, usize)>,
     letter_count: &'a [(char, u32)],
@@ -19,11 +19,6 @@ pub enum GameResult {
     CantForm,
 }
 
-impl Default for Game<'_> {
-    fn default() -> Self {
-        Self::new(Language::English, 10)
-    }
-}
 
 impl<'a> Game<'a> {
     pub fn parse_dictionary(dict_str: &str) -> Vec<(&str, usize)> {

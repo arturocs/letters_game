@@ -1,12 +1,13 @@
+use crate::game_data::{ENGLISH_DICTIONARY, ENGLISH_LETTERS, SPANISH_DICTIONARY, SPANISH_LETTERS};
 use rand::{prelude::SliceRandom, thread_rng};
-use rustc_hash::FxHashMap;
-
-pub static ENGLISH_DICTIONARY: &str = include_str!("../dictionaries/eng.txt");
-pub static SPANISH_DICTIONARY: &str = include_str!("../dictionaries/spa.txt");
+pub enum Language {
+    English,
+    Spanish,
+}
 
 pub struct Game<'a> {
     dictionary: Vec<(&'a str, u8)>,
-    letter_count: Vec<(char, u32)>,
+    letter_count: &'a [(char, u32)],
     available_letters: Vec<char>,
 }
 
@@ -19,7 +20,7 @@ pub enum GameResult {
 
 impl Default for Game<'_> {
     fn default() -> Self {
-        Self::new(ENGLISH_DICTIONARY, 10)
+        Self::new(Language::English, 10)
     }
 }
 
@@ -43,17 +44,6 @@ impl<'a> Game<'a> {
         }
     }
 
-    fn count_letters(dictionary: &[(&str, u8)]) -> Vec<(char, u32)> {
-        let mut char_count = FxHashMap::default();
-        char_count.reserve(27);
-        for (word, _) in dictionary.iter() {
-            for c in word.chars() {
-                *char_count.entry(Self::remove_accents(c)).or_insert(0) += 1;
-            }
-        }
-        char_count.into_iter().collect()
-    }
-
     pub fn generate_available_letters(&mut self, size: usize) {
         let rng = &mut thread_rng();
         let mut letters: Vec<_> = (0..size)
@@ -64,13 +54,22 @@ impl<'a> Game<'a> {
         self.available_letters = letters;
     }
 
-    pub fn new(dict_str: &'a str, size: usize) -> Self {
-        let dictionary = Self::parse_dictionary(dict_str);
-        let letter_count = Self::count_letters(&dictionary);
-        let mut game = Self {
-            dictionary,
-            letter_count,
-            available_letters: Vec::new(),
+    pub fn set_available_letters(&mut self, letters: Vec<char>) {
+        self.available_letters = letters
+    }
+
+    pub fn new(language: Language, size: usize) -> Self {
+        let mut game = match language {
+            Language::English => Self {
+                dictionary:Self::parse_dictionary(ENGLISH_DICTIONARY),
+                letter_count: &ENGLISH_LETTERS,
+                available_letters: Vec::new(),
+            },
+            Language::Spanish => Self {
+                dictionary: Self::parse_dictionary(SPANISH_DICTIONARY),
+                letter_count: &SPANISH_LETTERS,
+                available_letters: Vec::new(),
+            },
         };
         game.generate_available_letters(size);
         game

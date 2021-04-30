@@ -72,8 +72,7 @@ impl<'a> Game<'a> {
     }
 
     pub fn exist(&self, word: &str) -> bool {
-        let size = word.chars().count();
-        self.dictionary.binary_search(&(word, size)).is_ok()
+        self.dictionary.binary_search_by(|a| a.0.cmp(word)).is_ok()
     }
 
     pub fn get_available_letters(&self) -> String {

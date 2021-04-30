@@ -6,5 +6,5 @@ mod style;
 mod ui_text;
 
 fn main() -> iced::Result {
-    game_ui::GameUI::run(Settings::default())
+    game_ui::GameUi::run(Settings::default())
 }

@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 use crate::game_data::{ENGLISH_DICTIONARY, ENGLISH_LETTERS, SPANISH_DICTIONARY, SPANISH_LETTERS};
 use rand::{prelude::SliceRandom, thread_rng};
+
 pub enum Language {
     English,
     Spanish,

@@ -7,7 +7,7 @@ use iced::{
     Row,
 };
 
-use crate::ui_text::UIText;
+use crate::ui_text::UiText;
 use crate::{
     game_core::{Game, GameResult, Language},
     style,
@@ -25,7 +25,7 @@ impl Default for Screen {
 }
 
 #[derive(Default)]
-pub(crate) struct GameUI<'a> {
+pub(crate) struct GameUi<'a> {
     text_input_state: text_input::State,
     text_input_value: String,
     scroll: scrollable::State,
@@ -35,7 +35,7 @@ pub(crate) struct GameUI<'a> {
     spanish_button: button::State,
     play_button: button::State,
     game_core: Game<'a>,
-    ui_text: UIText<'a>,
+    ui_text: UiText<'a>,
     language: Screen,
     game_messages: (&'a str, String, &'a str),
 }
@@ -50,7 +50,7 @@ pub enum Message {
     Input(String),
 }
 
-impl Sandbox for GameUI<'_> {
+impl Sandbox for GameUi<'_> {
     type Message = Message;
 
     fn new() -> Self {
@@ -73,18 +73,18 @@ impl Sandbox for GameUI<'_> {
             }
             Message::Input(s) => self.text_input_value = s.to_lowercase(),
             Message::PlayPressed => {
-                if self.text_input_value != "" {
+                if self.text_input_value.is_empty() {
                     self.play()
                 }
             }
             Message::EnglishPressed => {
                 self.game_core = Game::new(Language::English, 10);
-                self.ui_text = UIText::english();
+                self.ui_text = UiText::english();
                 self.language = Screen::Play;
             }
             Message::SpanishPressed => {
                 self.game_core = Game::new(Language::Spanish, 10);
-                self.ui_text = UIText::spanish();
+                self.ui_text = UiText::spanish();
                 self.language = Screen::Play;
             }
         }
@@ -92,7 +92,7 @@ impl Sandbox for GameUI<'_> {
 
     fn view(&mut self) -> Element<Message> {
         let screen: Element<_> = match self.language {
-            Screen::Play => self.play_screen().into(),
+            Screen::Play => self.play_screen(),
             Screen::LanguageSelection => self.language_selection().into(),
         };
 
@@ -105,7 +105,7 @@ impl Sandbox for GameUI<'_> {
     }
 }
 
-impl GameUI<'_> {
+impl GameUi<'_> {
     fn language_selection(&mut self) -> Column<Message> {
         Column::new()
             .max_width(720)
@@ -129,7 +129,6 @@ impl GameUI<'_> {
                 .padding(20)
                 .on_press(Message::SpanishPressed),
             )
-            .into()
     }
 
     fn play_screen(&mut self) -> Element<Message> {
@@ -231,7 +230,7 @@ impl GameUI<'_> {
     }
 
     fn play(&mut self) {
-        if self.game_messages.0 == "" {
+        if self.game_messages.0.is_empty() {
             self.game_messages = match self.game_core.play(&self.text_input_value) {
                 GameResult::Tie(best) => (self.ui_text.my_word, best, self.ui_text.tie),
                 GameResult::YouLose(best) => (self.ui_text.my_word, best, self.ui_text.you_lose),

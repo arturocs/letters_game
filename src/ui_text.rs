@@ -1,4 +1,4 @@
-pub struct UIText<'a> {
+pub struct UiText<'a> {
     pub letter_game: &'a str,
     pub available_letters: &'a str,
     pub input_placeholder: &'a str,
@@ -11,13 +11,13 @@ pub struct UIText<'a> {
     pub play_again: &'a str,
 }
 
-impl Default for UIText<'_> {
+impl Default for UiText<'_> {
     fn default() -> Self {
-        UIText::english()
+        UiText::english()
     }
 }
 
-impl UIText<'_> {
+impl UiText<'_> {
     pub fn spanish() -> Self {
         Self {
             letter_game: "Juego de Letras",

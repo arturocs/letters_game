@@ -27,11 +27,7 @@ impl Default for Game<'_> {
 
 impl<'a> Game<'a> {
     pub fn parse_dictionary(dict_str: &str) -> Vec<(&str, usize)> {
-        dict_str
-            .lines()
-            .filter(|s| !s.is_empty())
-            .map(|s| (s, s.chars().count()))
-            .collect()
+        dict_str.lines().map(|s| (s, s.chars().count())).collect()
     }
 
     fn remove_accents(c: char) -> char {

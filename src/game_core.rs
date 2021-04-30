@@ -9,7 +9,7 @@ pub enum Language {
 pub struct Game<'a> {
     dictionary: Vec<(&'a str, usize)>,
     letter_count: &'a [(char, u32)],
-    available_letters: Vec<char>,
+    pub available_letters: Vec<char>,
 }
 
 pub enum GameResult {
@@ -18,7 +18,6 @@ pub enum GameResult {
     DoesntExist,
     CantForm,
 }
-
 
 impl<'a> Game<'a> {
     pub fn parse_dictionary(dict_str: &str) -> Vec<(&str, usize)> {
@@ -43,10 +42,6 @@ impl<'a> Game<'a> {
             .collect();
         letters.sort_unstable();
         self.available_letters = letters;
-    }
-
-    pub fn set_available_letters(&mut self, letters: Vec<char>) {
-        self.available_letters = letters
     }
 
     pub fn new(language: Language, size: usize) -> Self {

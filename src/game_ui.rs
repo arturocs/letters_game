@@ -1,17 +1,15 @@
-use iced::{
-    button, scrollable, Align, Button, Column, Container, Element, HorizontalAlignment, Length,
-    Sandbox, Scrollable, Text, VerticalAlignment,
-};
-use iced::{
-    text_input::{self, TextInput},
-    Row,
-};
-
-use crate::ui_text::UiText;
 use crate::{
     game_core::{Game, GameResult, Language},
     style,
+    ui_text::UiText,
 };
+use iced::{
+    button, scrollable,
+    text_input::{self, TextInput},
+    Align, Button, Column, Container, Element, HorizontalAlignment, Length, Row, Sandbox,
+    Scrollable, Text, VerticalAlignment,
+};
+use std::mem::swap;
 
 enum Screen {
     Play,
@@ -235,9 +233,9 @@ impl GameUi<'_> {
                 GameResult::DoesntExist => (self.ui_text.doesnt_exist, String::new(), ""),
                 GameResult::CantForm => (self.ui_text.cant_form, String::new(), ""),
             };
-            std::mem::swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
+            swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
         } else {
-            std::mem::swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
+            swap(&mut self.ui_text.play, &mut self.ui_text.play_again);
             self.game_core
                 .generate_available_letters(self.game_core.available_letters.len());
             self.game_messages = Default::default()

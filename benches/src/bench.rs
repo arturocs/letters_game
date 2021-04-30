@@ -37,10 +37,10 @@ pub fn bench_exist(c: &mut Criterion) {
 
 pub fn bench_is_formable(c: &mut Criterion) {
     let mut game = Game::new(Language::English, 20);
-    game.set_available_letters(vec![
+    game.available_letters = vec![
         'a', 'a', 'a', 'a', 'f', 'h', 'h', 'i', 'i', 'i', 'l', 'm', 'm', 'n', 'r', 's', 's', 't',
         'u', 'u', 'y',
-    ]);
+    ];
     c.bench_function("is_formable", |b| {
         b.iter(|| {
             black_box(game.is_formable("nummulitidae"));
@@ -50,10 +50,10 @@ pub fn bench_is_formable(c: &mut Criterion) {
 
 pub fn bench_find_longest_word(c: &mut Criterion) {
     let mut game = Game::new(Language::English, 20);
-    game.set_available_letters(vec![
+    game.available_letters = vec![
         'a', 'a', 'a', 'a', 'f', 'h', 'h', 'i', 'i', 'i', 'l', 'm', 'm', 'n', 'r', 's', 's', 't',
         'u', 'u', 'y',
-    ]);
+    ];
     c.bench_function("find_longest_word", |b| {
         b.iter(|| black_box(game.find_longest_word()))
     });
@@ -63,10 +63,10 @@ pub fn bench_play(c: &mut Criterion) {
     c.bench_function("play", |b| {
         b.iter(|| {
             let mut game = Game::new(Language::English, 20);
-            game.set_available_letters(vec![
+            game.available_letters = vec![
                 'a', 'a', 'a', 'a', 'd', 'e', 'f', 'h', 'h', 'i', 'i', 'i', 'l', 'm', 'm', 'n',
                 'r', 's', 's', 't', 'u', 'u', 'y',
-            ]);
+            ];
 
             black_box(game.play("nummulitidae"))
         })

@@ -71,7 +71,9 @@ impl Sandbox for GameUi<'_> {
             }
             Message::Input(s) => self.text_input_value = s.to_lowercase(),
             Message::PlayPressed => {
-                self.text_input_value.is_empty().then(|| self.play());
+                if self.text_input_value.is_empty() {
+                    self.play()
+                }
             }
             Message::EnglishPressed => {
                 self.game_core = Game::new(Language::English, 10);

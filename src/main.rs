@@ -1,10 +1,10 @@
 use iced::{Sandbox, Settings};
 mod game_core;
-mod ui_text;
-mod style;
+mod game_data;
 mod game_ui;
+mod style;
+mod ui_text;
 
-
-pub fn main() -> iced::Result {
+fn main() -> iced::Result {
     game_ui::GameUI::run(Settings::default())
 }

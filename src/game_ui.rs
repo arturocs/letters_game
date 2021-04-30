@@ -71,7 +71,7 @@ impl Sandbox for GameUi<'_> {
             }
             Message::Input(s) => self.text_input_value = s.to_lowercase(),
             Message::PlayPressed => {
-                if self.text_input_value.is_empty() {
+                if !self.text_input_value.is_empty() {
                     self.play()
                 }
             }

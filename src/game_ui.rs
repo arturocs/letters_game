@@ -6,8 +6,9 @@ use crate::{
 use iced::{
     button, scrollable,
     text_input::{self, TextInput},
-    Align, Button, Column, Container, Element, HorizontalAlignment, Length, Row, Sandbox,
-    Scrollable, Text, VerticalAlignment,
+    alignment,
+    Alignment, Button, Column, Container, Element, Length, Row, Sandbox,
+    Scrollable, Text,
 };
 use std::mem::swap;
 
@@ -108,11 +109,11 @@ impl GameUi<'_> {
         Column::new()
             .max_width(720)
             .spacing(100)
-            .align_items(Align::Center)
+            .align_items(Alignment::Center)
             .push(
                 Button::new(
                     &mut self.english_button,
-                    Text::new("English").horizontal_alignment(HorizontalAlignment::Center),
+                    Text::new("English").horizontal_alignment(alignment::Horizontal::Center),
                 )
                 .style(style::Button::Primary)
                 .padding(20)
@@ -121,7 +122,7 @@ impl GameUi<'_> {
             .push(
                 Button::new(
                     &mut self.spanish_button,
-                    Text::new("Español").horizontal_alignment(HorizontalAlignment::Center),
+                    Text::new("Español").horizontal_alignment(alignment::Horizontal::Center),
                 )
                 .style(style::Button::Primary)
                 .padding(20)
@@ -133,35 +134,35 @@ impl GameUi<'_> {
         let content: Element<Message> = Column::new()
             .max_width(720)
             .spacing(15)
-            .align_items(Align::Center)
+            .align_items(Alignment::Center)
             .push(
                 Text::new(self.ui_text.letter_game)
-                    .horizontal_alignment(HorizontalAlignment::Center)
+                    .horizontal_alignment(alignment::Horizontal::Center)
                     .size(80),
             )
             .push(
                 Text::new(self.game_messages.0)
-                    .horizontal_alignment(HorizontalAlignment::Center)
+                    .horizontal_alignment(alignment::Horizontal::Center)
                     .size(40),
             )
             .push(
                 Text::new(&self.game_messages.1)
-                    .horizontal_alignment(HorizontalAlignment::Center)
+                    .horizontal_alignment(alignment::Horizontal::Center)
                     .size(40),
             )
             .push(
                 Text::new(self.game_messages.2)
-                    .horizontal_alignment(HorizontalAlignment::Center)
+                    .horizontal_alignment(alignment::Horizontal::Center)
                     .size(40),
             )
             .push(
                 Text::new(self.ui_text.available_letters)
-                    .horizontal_alignment(HorizontalAlignment::Center)
+                    .horizontal_alignment(alignment::Horizontal::Center)
                     .size(50),
             )
             .push(
                 Text::new(self.game_core.format_available_letters())
-                    .horizontal_alignment(HorizontalAlignment::Center)
+                    .horizontal_alignment(alignment::Horizontal::Center)
                     .size(40),
             )
             .push(
@@ -171,11 +172,11 @@ impl GameUi<'_> {
                         .push(
                             Button::new(
                                 &mut self.increment_button,
-                                Text::new("+").horizontal_alignment(HorizontalAlignment::Center),
+                                Text::new("+").horizontal_alignment(alignment::Horizontal::Center),
                             )
                             .padding(15)
                             .style(style::Button::Secondary)
-                            .min_width(50)
+                            .width(iced::Length::Units(50))
                             .on_press(Message::IncrementPressed),
                         )
                         .push(
@@ -184,11 +185,11 @@ impl GameUi<'_> {
                         .push(
                             Button::new(
                                 &mut self.decrement_button,
-                                Text::new("-").horizontal_alignment(HorizontalAlignment::Center),
+                                Text::new("-").horizontal_alignment(alignment::Horizontal::Center),
                             )
                             .padding(15)
                             .style(style::Button::Secondary)
-                            .min_width(50)
+                            .width(iced::Length::Units(50))
                             .on_press(Message::DecrementPressed),
                         ),
                 )
@@ -209,8 +210,8 @@ impl GameUi<'_> {
                 Button::new(
                     &mut self.play_button,
                     Text::new(self.ui_text.play)
-                        .horizontal_alignment(HorizontalAlignment::Center)
-                        .vertical_alignment(VerticalAlignment::Center),
+                        .horizontal_alignment(alignment::Horizontal::Center)
+                        .vertical_alignment(alignment::Vertical::Center),
                 )
                 .style(style::Button::Secondary)
                 .padding(15)
